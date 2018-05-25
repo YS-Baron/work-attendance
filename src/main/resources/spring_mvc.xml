@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter"/>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=utf-8</value>
+                        <value>application/json;charset=utf-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--包扫描-->
+    <context:component-scan base-package="com.coder520.*.controller">
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>-->
+    </context:component-scan>
+    <!--开启注解扫描-->
+    <mvc:annotation-driven/>
+
+    <!--处理静态资源-->
+    <mvc:default-servlet-handler/>
+
+    <mvc:interceptors>
+        <bean class="com.coder520.common.interceptor.SessionInterceptor"/>
+    </mvc:interceptors>
+    <bean id="velocityConfigurer" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/views"/>
+        <property name="velocityProperties">
+            <props>
+                <prop key="input.encoding">utf-8</prop>
+                <prop key="output.encoding">utf-8</prop>
+                <prop key="file.resource.loader.cache">flase</prop>
+                <prop key="file.resource.loader.modificationCheckInterval">1</prop>
+                <prop key="velocimacro.library.autoreload">false</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!--视图解析器-->
+    <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="suffix" value=".vm"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <property name="dateToolAttribute" value="date"/><!--日期处理-->
+    </bean>
+
+</beans>
